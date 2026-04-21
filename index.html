@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI MATH TUTOR</title>
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --white:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:#e2e8f0;
+      --blue:#1d4ed8;
+      --indigo:#4338ca;
+      --purple:#7c3aed;
+      --soft:#eef2ff;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:20px;
+      --max:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+      color:var(--text);
+      line-height:1.7;
+    }
+    a{text-decoration:none;color:inherit}
+    .container{max-width:var(--max);margin:0 auto;padding:0 24px}
+    .nav{
+      position:sticky;top:0;z-index:1000;
+      background:rgba(255,255,255,.88);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(226,232,240,.8);
+    }
+    .nav-inner{
+      max-width:var(--max);margin:0 auto;padding:14px 24px;
+      display:flex;justify-content:space-between;align-items:center;gap:20px;
+    }
+    .brand{font-weight:800;letter-spacing:.04em}
+    .nav-links{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+    .nav-links a:hover{color:var(--blue)}
+    section{padding:84px 0;border-bottom:1px solid rgba(226,232,240,.5)}
+    .hero{
+      min-height:88vh;display:grid;grid-template-columns:1.1fr .9fr;
+      gap:42px;align-items:center;
+    }
+    .eyebrow{
+      display:inline-block;padding:8px 14px;border-radius:999px;
+      background:var(--soft);color:var(--indigo);font-size:13px;font-weight:700;
+      margin-bottom:18px;
+    }
+    h1{font-size:clamp(42px,7vw,72px);line-height:1.02;margin:0 0 16px}
+    h2{font-size:clamp(30px,4vw,44px);line-height:1.1;margin:0 0 18px}
+    h3{font-size:20px;margin:0 0 12px}
+    p{margin:0 0 14px;color:var(--muted)}
+    .lead{font-size:19px;color:#1e293b}
+    .small{font-size:14px}
+    .buttons{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+    .btn{
+      padding:14px 20px;border-radius:14px;font-weight:700;display:inline-block;
+      box-shadow:var(--shadow);transition:.25s ease;
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+    .btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+    .btn:hover{transform:translateY(-2px)}
+    .hero-card{
+      background:linear-gradient(135deg,#dbeafe,#ede9fe);
+      border:1px solid #dbeafe;border-radius:28px;padding:28px;
+      box-shadow:var(--shadow);min-height:440px;display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .mock-chat{
+      background:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow)
+    }
+    .bubble{
+      padding:12px 14px;border-radius:14px;margin:10px 0;max-width:85%;
+      font-size:14px
+    }
+    .bubble.user{background:#e2e8f0;margin-left:auto}
+    .bubble.ai{background:#eef2ff;color:#312e81}
+    .grid{display:grid;gap:22px}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    .card{
+      background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+      padding:24px;box-shadow:var(--shadow)
+    }
+    .highlight{
+      margin-top:24px;padding:22px;border-radius:18px;
+      background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #dbeafe;
+      color:#1e293b;font-weight:700
+    }
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+    .mock-ui{
+      min-height:380px;border-radius:24px;background:linear-gradient(135deg,#0f172a,#312e81);
+      color:#fff;padding:24px;box-shadow:var(--shadow)
+    }
+    .mock-ui .screen{
+      margin-top:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;padding:18px
+    }
+    .mock-ui img{width:100%;height:auto;display:block;border-radius:18px}
+    .accordion details{
+      background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px
+    }
+    .accordion details+details{margin-top:14px}
+    .accordion summary{cursor:pointer;font-weight:800;color:var(--text)}
+    .subsection{margin-top:34px}
+    .timeline{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px
+    }
+    .step{
+      position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)
+    }
+    .step .num{
+      width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;font-weight:800;margin-bottom:14px
+    }
+    .formula{
+      display:inline-block;padding:10px 16px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:800;margin:12px 0 0
+    }
+    table{
+      width:100%;border-collapse:collapse;background:#fff;border-radius:20px;overflow:hidden;
+      box-shadow:var(--shadow);border:1px solid var(--line)
+    }
+    th,td{padding:16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{background:#f8fafc}
+    .founder{
+      display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:center
+    }
+    .portrait{
+      height:320px;border-radius:28px;overflow:hidden;background:linear-gradient(135deg,#c7d2fe,#e9d5ff);
+      box-shadow:var(--shadow)
+    }
+    .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+    .cta{
+      background:linear-gradient(135deg,#0f172a,#312e81,#6d28d9);
+      color:#fff;border-radius:32px;padding:48px;box-shadow:var(--shadow)
+    }
+    .cta p{color:rgba(255,255,255,.88)}
+    ul{padding-left:20px;color:var(--muted);margin:0}
+    li{margin:0 0 10px}
+    footer{padding:28px 0;color:#64748b;font-size:14px}
+    .reveal{opacity:0;transform:translateY(24px);transition:.7s ease}
+    .reveal.show{opacity:1;transform:none}
+    @media (max-width: 980px){
+      .hero,.two-col,.founder,.grid-4,.grid-3,.timeline{grid-template-columns:1fr}
+      .grid-2{grid-template-columns:1fr}
+      .nav-inner{align-items:flex-start;flex-direction:column}
+      section{padding:68px 0}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">AI MATH TUTOR</div>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#problem">Problem</a>
+        <a href="#product">Product</a>
+        <a href="#theory">Theory</a>
+        <a href="#core">Core Mechanism</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#technology">Technology</a>
+        <a href="#affordances">AI Affordances</a>
+        <a href="#founder">Founder</a>
+        <a href="#conclusion">Conclusion</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="home">
+    <div class="container hero">
+      <div class="reveal">
+        <div class="eyebrow">AI Digital Learning Artefact</div>
+        <h1>AI MATH TUTOR</h1>
+        <p class="lead">Redefining the AI Math Tutor</p>
+        <p>AI MATH TUTOR is designed as an AI mathematics tutor that does not immediately reveal answers. Instead, it uses <strong>Socratic questioning</strong> as its primary tutoring interaction method, drawing on teaching strategies such as the <strong>Zone of Proximal Development (ZPD)</strong>, <strong>Polya Problem Solving</strong>, and <strong>Scaffolding</strong> to generate adaptive teaching messages based on students’ answers and questions.</p>
+        <p>This project responds to a <strong>key educational challenge</strong>: when children get stuck at home, there is often no one available to guide their thinking in a timely and pedagogically effective way.</p>
+        <p>Rather than replacing teachers, the artefact fills the after-school learning gap by functioning as a Socratic-style digital tutor for young learners.</p>
+        <div class="buttons">
+          <a class="btn primary" href="#product">Explore Product</a>
+          <a class="btn secondary" href="#theory">View Theory</a>
+        </div>
+      </div>
+      <div class="hero-card reveal">
+        <div>
+          <h3>AI Tutor Interaction Preview</h3>
+          <p>Placeholder visual for AI tutor + child learning scene.</p>
+        </div>
+        <div class="mock-chat">
+          <div class="bubble user">I think the second player wins.</div>
+          <div class="bubble ai">If the opponent takes 1 piece, how many would you take?</div>
+          <div class="bubble user">Maybe 2, so I can control the total.</div>
+          <div class="bubble ai">Good. Why would keeping that total matter?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem">
+    <div class="container reveal">
+      <h2>Educational Context and Problem</h2>
+      <p class="lead">When a child gets stuck on mathematics homework at home, the available options are often limited, delayed, or pedagogically weak.</p>
+
+      <div class="grid grid-4" style="margin-top:28px">
+        <div class="card">
+          <h3>Ask Parents</h3>
+          <p><strong>Problems:</strong><br>
+          Parents may have limited time, limited energy, or may have been away from formal schooling for too long to know how to teach effectively. When explanations are repeated but the child still does not understand, frustration can emerge on both sides.</p>
+        </div>
+        <div class="card">
+          <h3>Wait for Teachers</h3>
+          <p><strong>Problems:</strong><br>
+          Children can wait until the next school day to ask a teacher. However, teachers work with many students and cannot realistically provide sustained one-to-one support for every learner after school. As a result, many moments of confusion are never addressed properly.</p>
+        </div>
+        <div class="card">
+          <h3>Search for Answers</h3>
+          <p><strong>Problems:</strong><br>
+          Homework apps and search tools can instantly provide answers and worked solutions. Yet copying the answer often creates only an illusion of understanding. When a similar problem appears again, the learner still does not know how to reason through it independently.</p>
+        </div>
+        <div class="card">
+          <h3>Ask General AI</h3>
+          <p><strong>Problems:</strong><br>
+          Current AI assistants are highly capable, but they are also highly answer-oriented. When learners can simply copy and paste a prompt to obtain a direct solution, the cognitive work of mathematical thinking is externalised rather than developed.</p>
+        </div>
+      </div>
+
+      <div class="highlight">
+        The core problem is the lack of effective and targeted teaching guidance. Students often receive answers without improving their conceptual understanding or developing higher-order thinking skills.
+      </div>
+
+      <p style="margin-top:18px"><strong>Academic note:</strong> Generative AI can trigger metacognitive laziness, where students bypass deep mental processing and self-monitoring because they over-rely on the AI’s instant outputs, ultimately weakening learning motivation and problem-solving performance.</p>
+      <p style="margin-top:10px;font-size:14px"><strong>Reference:</strong> Fan, Y., Tang, L., Le, H., Shen, K., Tan, S., Zhao, Y., Shen, Y., Li, X., &amp; Gašević, D. (2025). Beware of metacognitive laziness: Effects of generative artificial intelligence on learning motivation, processes, and performance. British Journal of Educational Technology, 56(2), 489–530.</p>
+    </div>
+  </section>
+
+  <section id="product">
+    <div class="container reveal">
+      <h2>Product Positioning</h2>
+      <div class="two-col" style="margin-top:26px">
+        <div class="mock-ui">
+          <img src="interface.png" alt="Learning interface" width="560" height="380" />
+        </div>
+        <div>
+          <p><strong>AI MATH TUTOR</strong> is positioned as a <strong>Human Tutor</strong> rather than an <strong>Answer Engine</strong>.</p>
+          <p><strong>Learning Context / Subject: Mathematics.</strong> Having right or wrong answers and value logic</p>
+          <p><strong>Target Users: elementary school students</strong></p>
+          <p>It does not directly disclose solutions. It asks questions, gives hints, and provides scaffolding so that learners can move toward the answer through guided reasoning.</p>
+          <p>It is not intended to replace school teachers. Instead, it addresses the specific learning gap that emerges when a child is practising mathematics at home and lacks access to timely, individualised support.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:28px">
+        <div class="card">
+          <h3>Target Users</h3>
+          <p>Elementary school learners who need support with mathematical thinking rather than simple answer retrieval.</p>
+        </div>
+        <div class="card">
+          <h3>Teaching Scenarios</h3>
+          <p>Olympiad mathematics, logical reasoning, finding patterns, combinational game problems, and other thinking-based mathematics tasks.</p>
+        </div>
+        <div class="card">
+          <h3>Educational Value</h3>
+          <p>The product is designed not merely to improve task completion, but to support the development of explanation, reasoning, and transferable problem-solving habits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="theory">
+    <div class="container reveal">
+      <h2>Theoretical Foundation</h2>
+      <p class="lead">AI MATH TUTOR is grounded in established educational theory. These theories are not simply written as fixed rules. Instead, they are organised into a knowledge base that informs the system’s tutoring behaviour dynamically.</p>
+
+      <div class="accordion" style="margin-top:26px">
+        <details open>
+          <summary>Socratic Method — Collins, A. (1977). Processes in acquiring knowledge. In R. C. Anderson, R. J. Spiro, &amp; W. E. Montague (Eds.), Schooling and the acquisition of knowledge (pp. 339–363). Hillsdale, NJ: Erlbaum.</summary>
+          <p style="margin-top:12px">Socratic tutoring is a rule-governed process that uses counterexamples and entrapment strategies to expose gaps in a learner’s causal reasoning. In AI MATH TUTOR, the system applies these &quot;Inquiry Rules&quot; by identifying contradictions in a student’s logic; for instance, if a student suggests a rule that only works for specific numbers, the AI generates a specific case where that rule fails, forcing the student to revise their generalisation. This ensures the learner doesn’t just find a local solution but constructs a robust mental model of the underlying mathematical principles.</p>
+          <p>The knowledge base categorises these inquiry rules into strategies for picking diagnostic examples, methods for correcting overgeneralisations, and techniques for guiding students to derive general theories from specific cases.</p>
+        </details>
+
+        <details>
+          <summary>Scaffolding — Wood, D., Bruner, J. S., &amp; Ross, G. (1976). The role of tutoring in problem solving. Journal of child psychology and psychiatry, 17(2), 89-100.</summary>
+          <p style="margin-top:12px">Scaffolding theory suggests that support should be calibrated to the learner’s present understanding and gradually removed as competence stabilises. In this product, a learner may guess the correct answer before fully understanding it. The system therefore continues to support the learner at the level of strategy and pattern, only withdrawing support when understanding becomes more stable and demonstrable.</p>
+          <p>The knowledge base includes indicators of learner stage, conditions for increasing support, conditions for withdrawing support, and examples of appropriately challenging prompts.</p>
+        </details>
+
+        <details>
+          <summary>Zone of Proximal Development —Vygotsky, L. S. (1978). Mind in society: The development of higher psychological processes (Vol. 86). Harvard university press.</summary>
+          <p style="margin-top:12px">ZPD focuses on the &quot;sweet spot&quot; of learning tasks that a child cannot yet do alone but can master with the right nudge. AI MATH TUTOR identifies this zone by testing how a student reacts to different levels of help: it starts with a tiny, indirect hint to see if the child can bridge the gap themselves. If they are still stuck, the system provides a slightly more specific clue, constantly measuring exactly how much support is needed to spark a &quot;Eureka!&quot; moment without taking over the thinking.</p>
+          <p>The knowledge base contains methods for distinguishing between a &quot;careless mistake&quot; and a &quot;lack of understanding,&quot; as well as strategies for giving the smallest possible nudge to keep the child in the flow of learning.</p>
+        </details>
+
+        <details>
+          <summary>Polya’s Problem Solving — Polya, G. (1945). How to solve it: A new aspect of mathematical method. Princeton university press.</summary>
+          <p style="margin-top:12px">Polya’s classic framework divides problem solving into four stages: understanding the problem, devising a plan, carrying out the plan, and looking back. In the product, when a learner becomes stuck, the system does not immediately reveal the method. Instead, it asks questions such as “What is the unknown?”, “What information is given?”, and “Have you seen a similar problem before?” This supports metacognition and transfer, not just local task completion.</p>
+          <p>The knowledge base therefore includes stage-based prompts and reflective questioning strategies.</p>
+        </details>
+      </div>
+
+      <div class="highlight">In summary, these educational theories provide the pedagogical foundation of AI MATH TUTOR, guiding how the system supports reasoning, adapts to learner needs, and promotes deeper mathematical understanding.</div>
+    </div>
+  </section>
+
+  <section id="product design">
+    <div class="container reveal">
+      <h2>Product Design</h2>
+
+      <div class="subsection">
+        <h3>1. Three-Dimensional Mastery Tracking</h3>
+        <div class="grid grid-3" style="margin-top:18px">
+          <div class="card">
+            <h3>Answer Correct</h3>
+            <p>The learner is able to state the final conclusion required by the problem.</p>
+          </div>
+          <div class="card">
+            <h3>Strategy Correct</h3>
+            <p>The learner can explain how the steps or moves work, not just what the final answer is.</p>
+          </div>
+          <div class="card">
+            <h3>Pattern Correct</h3>
+            <p>The learner can identify and generalise the deeper mathematical rule or structure behind the problem.</p>
+          </div>
+        </div>
+        <p style="margin-top:16px">This design is important because the system allows learners to guess the answer first, even uncertainly, but it does not treat that as full mastery. Learning is considered complete only when answer, strategy, and pattern are all demonstrated.</p>
+      </div>
+
+      <div class="subsection">
+        <h3>2. Three-Layer Memory and Dual-Driven Decision Making</h3>
+        <div class="grid grid-3" style="margin-top:18px">
+          <div class="card">
+            <h3>Short-Term Memory (STM)</h3>
+            <p>Records each turn within the current problem, including the learner’s answer state, independence, and clarity. This enables the system to understand where the learner is currently stuck.</p>
+          </div>
+          <div class="card">
+            <h3>Mid-Term Memory (MTM)</h3>
+            <p>Tracks performance across a unit, aggregates mastery at the level of topic or question type, and supports decisions such as whether the learner should move forward, attempt a challenge task, or revisit a prerequisite idea.</p>
+          </div>
+          <div class="card">
+            <h3>Long-Term Memory (LTM)</h3>
+            <p>Stores longer-term learner characteristics such as preferred learning style, tendency toward trial-and-error or caution, and transfer ability across sessions.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>3. RAG Teaching Strategy Engine</h3>
+        <div class="card">
+          <p>AI MATH TUTOR does not rely solely on hardcoded logic. Instead, educational texts related to Socratic questioning, scaffolding, ZPD, and Polya’s approach are organised into a retrieval system. When the learner encounters difficulty, the system retrieves the most relevant pedagogical strategy and injects it into the prompt, allowing the model to respond more like an educator than a generic assistant.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workflow">
+    <div class="container reveal">
+      <h2>Workflow: ReAct Decision Cycle</h2>
+      <div class="formula">Thought → Action → Observation</div>
+      <div class="timeline">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Perception</h3>
+          <p>The system receives learner input and reads the current sticking point, the learner’s unit progress, and longer-term learner characteristics.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Decision</h3>
+          <p>The AI selects an action such as <strong>ask_question</strong>, <strong>give_hint</strong>, <strong>move_to_next</strong>, or <strong>go_back</strong>, depending on the learner’s current state.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Generation</h3>
+          <p>The system produces an encouraging and pedagogically guided tutor response, informed by retrieved theory where appropriate.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <h3>Memory Update</h3>
+          <p>Short-term, mid-term, and long-term memories are updated so that the next interaction is informed by prior performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="technology">
+    <div class="container reveal">
+      <h2>Technical Implementation</h2>
+      <div class="grid grid-3" style="margin-top:26px">
+        <div class="card">
+          <h3>Core Model</h3>
+          <p>Large language models such as DeepSeek are used for reasoning-intensive decision making and structured JSON-style output.</p>
+        </div>
+        <div class="card">
+          <h3>Vector Database</h3>
+          <p>ChromaDB is used to store and retrieve pedagogical strategy documents for retrieval-augmented generation.</p>
+        </div>
+        <div class="card">
+          <h3>Mastery Formula</h3>
+          <p><strong>Mastery = 0.4 × Independence + 0.4 × Clarity + 0.2 × Verification</strong></p>
+        </div>
+        <div class="card">
+          <h3>Frontend Interaction</h3>
+          <p>The current interface can be prototyped through a conversational tutoring interface, with future expansion into richer web-based environments.</p>
+        </div>
+        <div class="card">
+          <h3>Voice Support</h3>
+          <p>Speech-to-text can be integrated to simulate a more natural tutor-like dialogue experience.</p>
+        </div>
+        <div class="card">
+          <h3>System Division of Labour</h3>
+          <p>Code manages state, flow, memory, and progression logic; the AI model manages interpretation, action choice, and instructional dialogue generation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="affordances">
+    <div class="container reveal">
+      <h2>AI Affordances: Why AI Agent Technology Can Address the Challenge</h2>
+      <p class="lead">This section directly addresses the assignment’s emphasis on the affordances of digital technology.</p>
+
+      <div class="grid grid-4" style="margin-top:26px">
+        <div class="card">
+          <h3>Personalised Deep Guidance</h3>
+          <p>AI agents make it possible to provide one-to-one instructional guidance at scale, something that is difficult to achieve through conventional after-school support.</p>
+        </div>
+        <div class="card">
+          <h3>Instant Feedback</h3>
+          <p>Instead of waiting until the next day, learners can receive support during the crucial moment when confusion occurs, reducing the chance that misconceptions become fixed.</p>
+        </div>
+        <div class="card">
+          <h3>Dynamic Scaffolding</h3>
+          <p>The level of support can be adjusted in real time according to the learner’s state. This creates a more responsive digital learning environment than static answer systems.</p>
+        </div>
+        <div class="card">
+          <h3>Teaching Thinking, Not Just Answers</h3>
+          <p>Because the AI agent controls the release of information and the sequence of prompts, it can preserve the learner’s reasoning process rather than bypass it.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:28px">
+        <table>
+          <tr>
+            <th>Approach</th>
+            <th>Strength</th>
+            <th>Limitation</th>
+          </tr>
+          <tr>
+            <td>Traditional Educational Apps</td>
+            <td>Efficient and accessible</td>
+            <td>Often shallow and answer-oriented</td>
+          </tr>
+          <tr>
+            <td>Human Tutors</td>
+            <td>Deep and adaptive support</td>
+            <td>Expensive and difficult to scale</td>
+          </tr>
+          <tr>
+            <td>AI Agent Tutor</td>
+            <td>Deep + scalable + personalised guidance</td>
+            <td>Requires deliberate pedagogical design and responsible implementation</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight">
+        In short, the affordance of AI Agent technology is not simply automation. Its educational value lies in responsive interaction, scalable personalisation, dynamic scaffolding, and the ability to support thinking rather than just solution retrieval.
+      </div>
+    </div>
+  </section>
+
+  <section id="founder">
+    <div class="container reveal">
+      <h2>About the Founder</h2>
+      <div class="founder" style="margin-top:26px">
+        <div class="portrait">
+          <img src="photo.jpg" alt="Founder portrait" width="320" height="320" />
+        </div>
+        <div>
+          <p>Hello, I am the founder of this project.</p>
+          <p>I care deeply about the relationship between education and AI, and I believe that genuinely good education is not about transmitting answers, but about awakening thought.</p>
+          <p>I studied IB program in high school<br>
+          I finished my undergraduate from UCL BA Education Studies<br>
+          I am studying in HKU TDLL program<br>
+          Please Contact Me: u3656872@connect.hku.hk</p>
+          <div class="buttons">
+            <a class="btn primary" href="#conclusion">Contact</a>
+            <a class="btn secondary" href="#home">Back to Top</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="conclusion">
+    <div class="container reveal">
+      <div class="cta">
+        <h2>Conclusion: Bringing Mathematics Back to Thinking</h2>
+        <p>AI MATH TUTOR is not designed to become the smartest answer-generating machine.</p>
+        <p>Its aim is to use contemporary AI technology to recreate, in digital form, the older educational wisdom of guided questioning and structured reasoning.</p>
+        <p>The best mathematics education is not simply telling learners what to do.</p>
+        <p>It is helping them experience the moment of real intellectual ownership:</p>
+        <p style="font-size:28px;font-weight:800;color:#fff">“I figured it out myself.”</p>
+        <div class="buttons">
+          <a class="btn primary" href="#home" style="background:#fff;color:#111827">View Again</a>
+          <a class="btn secondary" href="#founder" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Contact</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">AI MATH TUTOR © 2026 · AI Digital Learning Artefact</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ entry.target.classList.add('show'); }
+      });
+    }, {threshold: 0.12});
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  </script>
+</body>
+</html>
